@@ -9,11 +9,11 @@ class TarefaController {
   create(req: Request, res: Response) {
     try {
       // 1. Pega os dados da requisição (trabalho de Gerente)
-      const { nome, descricao } = req.body;
+      const { title, description } = req.body;
 
       // 2. Chama o "Trabalhador" (Service) para fazer a lógica
       const service = new TarefaService();
-      const tarefa = service.create({ nome, descricao });
+      const tarefa = service.create({ title, description });
 
       // 3. Devolve a resposta (trabalho de Gerente)
       return res.status(201).json(tarefa);

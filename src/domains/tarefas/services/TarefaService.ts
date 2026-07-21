@@ -1,28 +1,32 @@
 // src/domains/tarefas/services/TarefaService.ts
 
+import { Tarefa } from "../model/Tarefa";
+
 // Na S7, guardamos em memória. Na S8, trocamos isso pelo Prisma.
-const bancoDeDadosEmMemoria: {
-  id: number;
-  nome: string;
-  descricao: string;
-  concluida: boolean;
-}[] = [];
+const bancoDeDadosEmMemoria: Tarefa[] = [];
 
 interface ICriarTarefa {
-  nome: string;
-  descricao: string;
+  title: string;
+  description?: string;
 }
 
 // Uma classe que "sabe" fazer operações de Tarefas
 class TarefaService {
   // Um método que sabe CRIAR uma tarefa
-  create({ nome, descricao }: ICriarTarefa) {
+  create({ title, description }: ICriarTarefa) {
     // --- AQUI MORA A LÓGICA DE NEGÓCIO ---
-    if (!nome) {
+    if (!title) {
       throw new Error("Nome da tarefa é obrigatório");
     }
 
-    const novaTarefa = { id: Math.random(), nome, descricao, concluida: false };
+    const novaTarefa: Tarefa = {
+      id: Math.random(),
+      title,
+      completed: false,
+    };
+
+    if (description) novaTarefa.description = description;
+
     bancoDeDadosEmMemoria.push(novaTarefa);
     // -------------------------------------
 
