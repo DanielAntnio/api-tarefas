@@ -29,6 +29,10 @@ class TarefaService {
   list() {
     return bancoDeDadosEmMemoria;
   }
+
+  getById(id: number) {
+    return bancoDeDadosEmMemoria.find((tarefa) => tarefa.id === id);
+  }
 }
 
 export { TarefaService };

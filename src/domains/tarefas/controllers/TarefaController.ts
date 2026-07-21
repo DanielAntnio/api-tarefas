@@ -20,6 +20,18 @@ class TarefaController {
     const tarefas = service.list();
     return res.status(200).json(tarefas);
   }
+
+  getById(req: Request, res: Response) {
+    const id = Number(req.params.id);
+
+    const service = new TarefaService();
+    const tarefa = service.getById(id);
+
+    if (tarefa === undefined)
+      return res.status(404).json({ erro: "Tarefa não encontrada." });
+
+    return res.status(200).json(tarefa);
+  }
 }
 
 export { TarefaController };
