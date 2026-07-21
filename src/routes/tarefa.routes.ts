@@ -9,4 +9,6 @@ tarefaRoutes.get("/:id", controller.getById);
 
 tarefaRoutes.post("/", controller.create);
 
+tarefaRoutes.put("/:id", controller.update)
+
 export { tarefaRoutes };

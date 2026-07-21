@@ -32,6 +32,35 @@ class TarefaController {
 
     return res.status(200).json(tarefa);
   }
+
+  update(req: Request, res: Response) {
+    const id = Number(req.params.id);
+
+    const body = req.body;
+    const service = new TarefaService();
+
+    if (body === undefined)
+      return res.status(400).json({ erro: "Deve fornecer body" });
+
+    const { title, description, completed } = body;
+
+    if (!title && !description && !completed)
+      return res.status(400).json({
+        erro: "Body deve conter ao menos um dos campos de Tarefa a ser atualizado",
+      });
+
+    const tarefa = service.update({
+      id,
+      title,
+      description,
+      completed,
+    });
+
+    if (tarefa === undefined)
+      return res.status(404).json({ erro: "Tarefa não encontrada." });
+
+    return res.status(200).json(tarefa);
+  }
 }
 
 export { TarefaController };
