@@ -56,6 +56,14 @@ class TarefaService {
 
     return tarefa;
   }
+
+  delete(id: number) {
+    const index = bancoDeDadosEmMemoria.findIndex((tarefa) => tarefa.id === id);
+
+    if (index < 0) return;
+
+    return bancoDeDadosEmMemoria.splice(index, 1);
+  }
 }
 
 export { TarefaService };

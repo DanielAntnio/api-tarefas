@@ -61,6 +61,18 @@ class TarefaController {
 
     return res.status(200).json(tarefa);
   }
+
+  delete(req: Request, res: Response) {
+    const id = Number(req.params.id);
+
+    const service = new TarefaService();
+    const tarefas = service.delete(id);
+
+    if (!tarefas === undefined)
+      return res.status(404).json({ erro: "Tarefa não encontrada." });
+
+    return res.status(204).json({ sucess: true });
+  }
 }
 
 export { TarefaController };
