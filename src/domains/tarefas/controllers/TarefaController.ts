@@ -41,7 +41,7 @@ class TarefaController {
     if (tarefa === undefined)
       return res.status(404);
 
-    return res.status(200);
+    return res.status(204);
   }
 
   getById(req: Request, res: Response) {
