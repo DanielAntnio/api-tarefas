@@ -50,10 +50,7 @@ class TarefaController {
       return res.status(200).json(tarefas);
     }
 
-    const booleanLookup = { true: true, false: false };
-    const completedBoolean = booleanLookup[completed];
-
-    const tarefas = service.list(completedBoolean);
+    const tarefas = service.list(completed === "true");
     return res.status(200).json(tarefas);
   }
 
