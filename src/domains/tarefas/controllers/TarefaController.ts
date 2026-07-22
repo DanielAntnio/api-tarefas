@@ -44,7 +44,7 @@ class TarefaController {
 
     const { title, description, completed } = body;
 
-    if (!title && !description && !completed)
+    if (!title && !description && completed === undefined)
       return res.status(400).json({
         erro: "Body deve conter ao menos um dos campos de Tarefa a ser atualizado",
       });
