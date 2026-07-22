@@ -50,13 +50,7 @@ class TarefaService {
 
     if (!tarefa) return undefined;
 
-    if (title && title !== tarefa.title) tarefa.title = title;
-
-    if (description && description !== tarefa.description)
-      tarefa.description = description;
-
-    if (completed !== undefined && completed !== tarefa.completed)
-      tarefa.completed = completed;
+    Object.assign(tarefa, updateValues);
 
     return tarefa;
   }
