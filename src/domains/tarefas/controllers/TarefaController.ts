@@ -32,6 +32,18 @@ class TarefaController {
     return res.status(200).json(tarefas);
   }
 
+  idExist(req: Request, res: Response) {
+    const id = Number(req.params.id);
+
+    const service = new TarefaService();
+    const tarefa = service.getById(id);
+
+    if (tarefa === undefined)
+      return res.status(404);
+
+    return res.status(200);
+  }
+
   getById(req: Request, res: Response) {
     const id = Number(req.params.id);
 
