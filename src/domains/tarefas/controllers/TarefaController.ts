@@ -1,5 +1,34 @@
 import type { Request, Response } from "express";
 import { TarefaService } from "../services/TarefaService";
+import { ApiError } from "../../../handlers/erros";
+
+interface IUpdateBody {
+  title?: string;
+  description?: string;
+  completed?: boolean;
+}
+
+function CopyObjectSubset<T, K extends keyof T>(
+  source: Pick<T, (typeof keys)[number]>,
+  dest: T,
+  keys: K[],
+) {
+  keys.forEach((key) => {
+    if (source[key] !== undefined) dest[key] = source[key];
+  });
+}
+
+function getUpdateBody(body: Request["body"]): IUpdateBody {
+  if (body === undefined) throw new ApiError("Deve fornecer body");
+
+  const update: IUpdateBody = {};
+  CopyObjectSubset(body, update, ["completed", "description", "title"]);
+
+  if (Object.keys(update).length === 0)
+    throw new ApiError("Body deve conter ao menos um paramentro de tarefa");
+
+  return update;
+}
 
 class TarefaController {
   create(req: Request, res: Response) {
@@ -58,25 +87,12 @@ class TarefaController {
 
   update(req: Request, res: Response) {
     const id = Number(req.params.id);
+    const body = getUpdateBody(req.body);
 
-    const body = req.body;
     const service = new TarefaService();
-
-    if (body === undefined)
-      return res.status(400).json({ erro: "Deve fornecer body" });
-
-    const { title, description, completed } = body;
-
-    if (!title && !description && completed === undefined)
-      return res.status(400).json({
-        erro: "Body deve conter ao menos um dos campos de Tarefa a ser atualizado",
-      });
-
     const tarefa = service.update({
       id,
-      title,
-      description,
-      completed,
+      ...body,
     });
 
     if (tarefa === undefined)
