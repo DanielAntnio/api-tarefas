@@ -17,7 +17,7 @@ interface IUpdateTarefa {
 
 class TarefaService {
   create({ title, description }: ICriarTarefa) {
-    if (!title) {
+    if (!title.trim()) {
       throw new ApiError("Nome da tarefa é obrigatório");
     }
 
@@ -27,7 +27,7 @@ class TarefaService {
       completed: false,
     };
 
-    if (description) novaTarefa.description = description;
+    if (description?.trim()) novaTarefa.description = description;
 
     bancoDeDadosEmMemoria.push(novaTarefa);
 
