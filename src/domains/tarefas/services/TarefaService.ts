@@ -64,8 +64,6 @@ class TarefaService {
     const index = bancoDeDadosEmMemoria.findIndex((tarefa) => tarefa.id === id);
 
     if (index < 0) throw new ApiError("Tarefa não encontrada.", 404);
-
-    return bancoDeDadosEmMemoria.splice(index, 1);
   }
 }
 
