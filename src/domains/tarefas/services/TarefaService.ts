@@ -1,3 +1,4 @@
+import { ApiError } from "../../../handlers/erros";
 import { Tarefa } from "../model/Tarefa";
 
 const bancoDeDadosEmMemoria: Tarefa[] = [];
@@ -17,7 +18,7 @@ interface IUpdateTarefa {
 class TarefaService {
   create({ title, description }: ICriarTarefa) {
     if (!title) {
-      throw new Error("Nome da tarefa é obrigatório");
+      throw new ApiError("Nome da tarefa é obrigatório");
     }
 
     const novaTarefa: Tarefa = {
@@ -42,13 +43,17 @@ class TarefaService {
   }
 
   getById(id: number) {
-    return bancoDeDadosEmMemoria.find((tarefa) => tarefa.id === id);
+    const tarefa = bancoDeDadosEmMemoria.find((tarefa) => tarefa.id === id);
+
+    if (!tarefa) throw new ApiError("Tarefa não Encontrada", 404);
+
+    return tarefa;
   }
 
-  update({ id, title, description, completed }: IUpdateTarefa) {
+  update({ id, ...updateValues }: IUpdateTarefa) {
     const tarefa = this.getById(id);
 
-    if (!tarefa) return undefined;
+    if (!tarefa) throw new ApiError("Tarefa não Encontrada", 404);
 
     Object.assign(tarefa, updateValues);
 
@@ -58,7 +63,7 @@ class TarefaService {
   delete(id: number) {
     const index = bancoDeDadosEmMemoria.findIndex((tarefa) => tarefa.id === id);
 
-    if (index < 0) return;
+    if (index < 0) throw new ApiError("Tarefa não encontrada.", 404);
 
     return bancoDeDadosEmMemoria.splice(index, 1);
   }

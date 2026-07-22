@@ -32,16 +32,12 @@ function getUpdateBody(body: Request["body"]): IUpdateBody {
 
 class TarefaController {
   create(req: Request, res: Response) {
-    try {
-      const { title, description } = req.body;
+    const { title, description } = req.body;
 
-      const service = new TarefaService();
-      const tarefa = service.create({ title, description });
+    const service = new TarefaService();
+    const tarefa = service.create({ title, description });
 
-      return res.status(201).json(tarefa);
-    } catch (error: any) {
-      return res.status(400).json({ erro: error.message });
-    }
+    return res.status(201).json(tarefa);
   }
 
   list(req: Request, res: Response) {
@@ -65,10 +61,7 @@ class TarefaController {
     const id = Number(req.params.id);
 
     const service = new TarefaService();
-    const tarefa = service.getById(id);
-
-    if (tarefa === undefined)
-      return res.status(404);
+    service.getById(id);
 
     return res.status(204);
   }
@@ -78,9 +71,6 @@ class TarefaController {
 
     const service = new TarefaService();
     const tarefa = service.getById(id);
-
-    if (tarefa === undefined)
-      return res.status(404).json({ erro: "Tarefa não encontrada." });
 
     return res.status(200).json(tarefa);
   }
@@ -95,9 +85,6 @@ class TarefaController {
       ...body,
     });
 
-    if (tarefa === undefined)
-      return res.status(404).json({ erro: "Tarefa não encontrada." });
-
     return res.status(200).json(tarefa);
   }
 
@@ -105,12 +92,9 @@ class TarefaController {
     const id = Number(req.params.id);
 
     const service = new TarefaService();
-    const tarefas = service.delete(id);
+    service.delete(id);
 
-    if (!tarefas === undefined)
-      return res.status(404).json({ erro: "Tarefa não encontrada." });
-
-    return res.status(204).json({ sucess: true });
+    return res.status(204);
   }
 }
 
