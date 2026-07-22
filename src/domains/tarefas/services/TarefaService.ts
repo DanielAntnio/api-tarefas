@@ -33,8 +33,12 @@ class TarefaService {
     return novaTarefa;
   }
 
-  list() {
-    return bancoDeDadosEmMemoria;
+  list(completed?: boolean) {
+    if (completed === undefined) return bancoDeDadosEmMemoria;
+
+    return bancoDeDadosEmMemoria.filter(
+      (tarefa) => tarefa.completed === completed,
+    );
   }
 
   getById(id: number) {

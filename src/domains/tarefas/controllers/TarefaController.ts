@@ -17,7 +17,18 @@ class TarefaController {
 
   list(req: Request, res: Response) {
     const service = new TarefaService();
-    const tarefas = service.list();
+
+    const { completed } = req.query;
+
+    if (completed !== "true" && completed !== "false") {
+      const tarefas = service.list();
+      return res.status(200).json(tarefas);
+    }
+
+    const booleanLookup = { true: true, false: false };
+    const completedBoolean = booleanLookup[completed];
+
+    const tarefas = service.list(completedBoolean);
     return res.status(200).json(tarefas);
   }
 
