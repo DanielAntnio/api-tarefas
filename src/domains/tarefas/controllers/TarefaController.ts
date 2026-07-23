@@ -6,7 +6,7 @@ import { Tarefa } from "../model/Tarefa";
 interface IUpdateBody extends Partial<Omit<Tarefa, "id">> {}
 
 function CopyObjectSubset<T, K extends keyof T>(
-  source: Pick<T, (typeof keys)[number]>,
+  source: Pick<T, K>,
   dest: T,
   keys: K[],
 ) {
