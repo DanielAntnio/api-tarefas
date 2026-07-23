@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { TarefaService } from "../services/TarefaService";
-import { ApiError } from "../../../helpers/api-erros";
+import { BadRequestError } from "../../../helpers/api-erros";
 import { Tarefa } from "../model/Tarefa";
 
 interface IUpdateBody extends Partial<Omit<Tarefa, "id">> {}
@@ -16,13 +16,15 @@ function CopyObjectSubset<T, K extends keyof T>(
 }
 
 function getUpdateBody(body: Request["body"]): IUpdateBody {
-  if (body === undefined) throw new ApiError("Deve fornecer body", 400);
+  if (body === undefined) throw new BadRequestError("Deve fornecer body");
 
   const update: IUpdateBody = {};
   CopyObjectSubset(body, update, ["completed", "description", "title"]);
 
   if (Object.keys(update).length === 0)
-    throw new ApiError("Body deve conter ao menos um paramentro de tarefa", 400);
+    throw new BadRequestError(
+      "Body deve conter ao menos um paramentro de tarefa",
+    );
 
   return update;
 }

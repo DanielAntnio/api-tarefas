@@ -7,3 +7,17 @@ export class ApiError extends Error {
     Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
+
+export class BadRequestError extends ApiError {
+  constructor(message: string) {
+    super(message, 400);
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
+export class NotfoundError extends ApiError {
+  constructor(message: string) {
+    super(message, 404);
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}

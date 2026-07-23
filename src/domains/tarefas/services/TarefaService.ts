@@ -1,4 +1,4 @@
-import { ApiError } from "../../../helpers/api-erros";
+import { BadRequestError, NotfoundError } from "../../../helpers/api-erros";
 import { Tarefa } from "../model/Tarefa";
 
 const bancoDeDadosEmMemoria: Tarefa[] = [];
@@ -11,7 +11,7 @@ interface IUpdateTarefa
 class TarefaService {
   create({ title, description }: ICriarTarefa) {
     if (!title.trim()) {
-      throw new ApiError("Nome da tarefa é obrigatório", 400);
+      throw new BadRequestError("Nome da tarefa é obrigatório");
     }
 
     const novaTarefa: Tarefa = {
@@ -38,7 +38,7 @@ class TarefaService {
   getById(id: number) {
     const tarefa = bancoDeDadosEmMemoria.find((tarefa) => tarefa.id === id);
 
-    if (!tarefa) throw new ApiError("Tarefa não Encontrada", 404);
+    if (!tarefa) throw new NotfoundError("Tarefa não Encontrada");
 
     return tarefa;
   }
@@ -46,7 +46,7 @@ class TarefaService {
   update({ id, ...updateValues }: IUpdateTarefa) {
     const tarefa = this.getById(id);
 
-    if (!tarefa) throw new ApiError("Tarefa não Encontrada", 404);
+    if (!tarefa) throw new NotfoundError("Tarefa não Encontrada");
 
     Object.assign(tarefa, updateValues);
 
@@ -56,7 +56,7 @@ class TarefaService {
   delete(id: number) {
     const index = bancoDeDadosEmMemoria.findIndex((tarefa) => tarefa.id === id);
 
-    if (index < 0) throw new ApiError("Tarefa não encontrada.", 404);
+    if (index < 0) throw new NotfoundError("Tarefa não encontrada.");
   }
 }
 
