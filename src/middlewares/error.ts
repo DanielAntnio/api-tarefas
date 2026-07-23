@@ -9,6 +9,6 @@ export function ErrorHandler(
   next: NextFunction,
 ) {
   return res
-    .status(error instanceof ApiError ? error.status : 400)
+    .status(error instanceof ApiError ? error.statusCode : 400)
     .json({ erro: error.message });
 }

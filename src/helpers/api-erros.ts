@@ -1,9 +1,9 @@
 export class ApiError extends Error {
-  status: number;
+  public readonly statusCode: number;
 
-  constructor(message: string, status: number = 400) {
+  constructor(message: string, statusCode: number = 500) {
     super(message);
-    this.status = status;
+    this.statusCode = statusCode;
     Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
