@@ -31,6 +31,7 @@ function getUpdateBody(body: Request["body"]): IUpdateBody {
 
 class TarefaController {
   create(req: Request, res: Response) {
+    if (req.body === undefined) throw new BadRequestError("Deve fornecer body");
     const { title, description } = req.body;
 
     const service = new TarefaService();

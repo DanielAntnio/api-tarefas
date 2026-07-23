@@ -10,7 +10,7 @@ interface IUpdateTarefa
 
 class TarefaService {
   create({ title, description }: ICriarTarefa) {
-    if (!title.trim()) {
+    if (!title?.trim()) {
       throw new BadRequestError("Nome da tarefa é obrigatório");
     }
 
