@@ -16,13 +16,13 @@ function CopyObjectSubset<T, K extends keyof T>(
 }
 
 function getUpdateBody(body: Request["body"]): IUpdateBody {
-  if (body === undefined) throw new ApiError("Deve fornecer body");
+  if (body === undefined) throw new ApiError("Deve fornecer body", 400);
 
   const update: IUpdateBody = {};
   CopyObjectSubset(body, update, ["completed", "description", "title"]);
 
   if (Object.keys(update).length === 0)
-    throw new ApiError("Body deve conter ao menos um paramentro de tarefa");
+    throw new ApiError("Body deve conter ao menos um paramentro de tarefa", 400);
 
   return update;
 }

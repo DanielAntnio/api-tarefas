@@ -11,7 +11,7 @@ interface IUpdateTarefa
 class TarefaService {
   create({ title, description }: ICriarTarefa) {
     if (!title.trim()) {
-      throw new ApiError("Nome da tarefa é obrigatório");
+      throw new ApiError("Nome da tarefa é obrigatório", 400);
     }
 
     const novaTarefa: Tarefa = {
