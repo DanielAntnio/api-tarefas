@@ -57,6 +57,8 @@ class TarefaService {
     const index = bancoDeDadosEmMemoria.findIndex((tarefa) => tarefa.id === id);
 
     if (index < 0) throw new NotfoundError("Tarefa não encontrada.");
+
+    bancoDeDadosEmMemoria.splice(index, 1);
   }
 }
 
