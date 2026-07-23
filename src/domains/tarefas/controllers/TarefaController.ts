@@ -19,11 +19,11 @@ function CopyObjectSubset<T, K extends keyof T>(
   });
 }
 
-function getUpdateBody(body: Request["body"]): IUpdateBody {
+function getUpdateBody(body: Request["body"], params: string[]) {
   if (body === undefined) throw new BadRequestError("Deve fornecer body");
 
-  const update: IUpdateBody = {};
-  CopyObjectSubset(body, update, ["completed", "description", "title"]);
+  const update: { [key: string]: string | boolean } = {};
+  CopyObjectSubset(body, update, params);
 
   if (Object.keys(update).length === 0)
     throw new BadRequestError(
@@ -78,7 +78,11 @@ class TarefaController {
 
   update(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const body = getUpdateBody(req.body);
+    const body: IUpdateBody = getUpdateBody(req.body, [
+      "title",
+      "description",
+      "completed",
+    ]);
 
     const service = new TarefaService();
     const tarefa = service.update({
