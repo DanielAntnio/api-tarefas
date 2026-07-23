@@ -3,17 +3,10 @@ import { Tarefa } from "../model/Tarefa";
 
 const bancoDeDadosEmMemoria: Tarefa[] = [];
 
-interface ICriarTarefa {
-  title: string;
-  description?: string;
-}
+interface ICriarTarefa extends Pick<Tarefa, "title" | "description"> {}
 
-interface IUpdateTarefa {
-  id: number;
-  title?: string;
-  description?: string;
-  completed?: boolean;
-}
+interface IUpdateTarefa
+  extends Pick<Tarefa, "id">, Omit<Partial<Tarefa>, "id"> {}
 
 class TarefaService {
   create({ title, description }: ICriarTarefa) {

@@ -1,12 +1,9 @@
 import type { Request, Response } from "express";
 import { TarefaService } from "../services/TarefaService";
 import { ApiError } from "../../../helpers/api-erros";
+import { Tarefa } from "../model/Tarefa";
 
-interface IUpdateBody {
-  title?: string;
-  description?: string;
-  completed?: boolean;
-}
+interface IUpdateBody extends Partial<Omit<Tarefa, "id">> {}
 
 function CopyObjectSubset<T, K extends keyof T>(
   source: Pick<T, (typeof keys)[number]>,
