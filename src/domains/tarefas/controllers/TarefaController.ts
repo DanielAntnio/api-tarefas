@@ -11,7 +11,11 @@ function CopyObjectSubset<T, K extends keyof T>(
   keys: K[],
 ) {
   keys.forEach((key) => {
-    if (source[key] !== undefined) dest[key] = source[key];
+    if (
+      source[key] !== undefined &&
+      (typeof source[key] !== "string" || source[key].trim())
+    )
+      dest[key] = source[key];
   });
 }
 
