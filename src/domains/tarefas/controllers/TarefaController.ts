@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { TarefaService } from "../services/TarefaService";
-import { ApiError } from "../../../handlers/erros";
+import { ApiError } from "../../../helpers/api-erros";
 
 interface IUpdateBody {
   title?: string;

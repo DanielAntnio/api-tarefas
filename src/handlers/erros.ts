@@ -1,15 +1,6 @@
 import type { Request, Response } from "express";
 import { NextFunction } from "express";
-
-export class ApiError extends Error {
-  status: number;
-
-  constructor(message: string, status: number = 400) {
-    super(message);
-    this.status = status;
-    Object.setPrototypeOf(this, ApiError.prototype);
-  }
-}
+import { ApiError } from "../helpers/api-erros";
 
 export function ErrorHandler(
   error: Error,

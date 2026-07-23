@@ -1,4 +1,4 @@
-import { ApiError } from "../../../handlers/erros";
+import { ApiError } from "../../../helpers/api-erros";
 import { Tarefa } from "../model/Tarefa";
 
 const bancoDeDadosEmMemoria: Tarefa[] = [];
