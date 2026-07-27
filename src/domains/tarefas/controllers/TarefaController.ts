@@ -1,6 +1,7 @@
 import type { Request, Response } from "express";
 import { TarefaService } from "../services/TarefaService";
 import {
+  parseStringToBoolean,
   pickObject,
   trimObjectStrings,
 } from "../../../helpers/utils";
@@ -28,14 +29,11 @@ class TarefaController {
   list(req: Request, res: Response) {
     const service = new TarefaService();
 
-    const { completed } = req.query;
+    const completed = parseStringToBoolean(
+      req.query.completed as string | undefined,
+    );
 
-    if (completed !== "true" && completed !== "false") {
-      const tarefas = service.list();
-      return res.status(200).json(tarefas);
-    }
-
-    const tarefas = service.list(completed === "true");
+    const tarefas = service.list(completed);
     return res.status(200).json(tarefas);
   }
 

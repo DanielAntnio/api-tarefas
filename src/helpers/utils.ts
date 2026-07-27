@@ -28,3 +28,10 @@ export function trimObjectStrings<T extends Object>(object: T) {
     }
   });
 }
+
+export function parseStringToBoolean(value: string | undefined) {
+  if (value === "true") return true;
+  if (value === "false") return false;
+
+  return undefined;
+}
