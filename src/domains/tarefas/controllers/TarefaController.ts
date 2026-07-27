@@ -1,44 +1,26 @@
 import type { Request, Response } from "express";
 import { TarefaService } from "../services/TarefaService";
+import {
+  pickObject,
+  trimObjectStrings,
+} from "../../../helpers/utils";
 import { BadRequestError } from "../../../helpers/api-erros";
 import { Tarefa } from "../model/Tarefa";
 
+interface ICreateBody extends Pick<Tarefa, "title" | "description"> {}
 interface IUpdateBody extends Partial<Omit<Tarefa, "id">> {}
-
-function CopyObjectSubset<T, K extends keyof T>(
-  source: Pick<T, K>,
-  dest: T,
-  keys: K[],
-) {
-  keys.forEach((key) => {
-    if (
-      source[key] !== undefined &&
-      (typeof source[key] !== "string" || source[key].trim())
-    )
-      dest[key] = source[key];
-  });
-}
-
-function getUpdateBody(body: Request["body"], params: string[]) {
-  if (body === undefined) throw new BadRequestError("Deve fornecer body");
-
-  const update: { [key: string]: string | boolean } = {};
-  CopyObjectSubset(body, update, params);
-
-  if (Object.keys(update).length === 0)
-    throw new BadRequestError(
-      "Body deve conter ao menos um paramentro de tarefa",
-    );
-
-  return update;
-}
 
 class TarefaController {
   create(req: Request, res: Response) {
-    const { title, description } = req.body;
+    const createParams = pickObject(req.body, [
+      "title",
+      "description",
+    ]) as ICreateBody;
+
+    trimObjectStrings(createParams);
 
     const service = new TarefaService();
-    const tarefa = service.create({ title, description });
+    const tarefa = service.create(createParams);
 
     return res.status(201).json(tarefa);
   }
@@ -77,16 +59,24 @@ class TarefaController {
 
   update(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const body: IUpdateBody = getUpdateBody(req.body, [
+    const updateBody = pickObject(req.body, [
       "title",
       "description",
       "completed",
-    ]);
+    ]) as IUpdateBody;
+
+    trimObjectStrings(updateBody);
+
+    if (Object.keys(updateBody).length === 0)
+      throw new BadRequestError(
+        "Body deve ter ao menos um paramentro de Tarefa",
+      );
+
 
     const service = new TarefaService();
     const tarefa = service.update({
       id,
-      ...body,
+      ...updateBody,
     });
 
     return res.status(200).json(tarefa);
