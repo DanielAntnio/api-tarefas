@@ -12,7 +12,7 @@ interface ICreateBody extends Pick<Tarefa, "title" | "description"> {}
 interface IUpdateBody extends Partial<Omit<Tarefa, "id">> {}
 
 class TarefaController {
-  create(req: Request, res: Response) {
+ async create(req: Request, res: Response) {
     const createParams = pickObject(req.body, [
       "title",
       "description",
@@ -21,41 +21,41 @@ class TarefaController {
     trimObjectStrings(createParams);
 
     const service = new TarefaService();
-    const tarefa = service.create(createParams);
+    const tarefa = await service.create(createParams);
 
     return res.status(201).json(tarefa);
   }
 
-  list(req: Request, res: Response) {
+  async list(req: Request, res: Response) {
     const service = new TarefaService();
 
     const completed = parseStringToBoolean(
       req.query.completed as string | undefined,
     );
 
-    const tarefas = service.list(completed);
+    const tarefas = await service.list(completed);
     return res.status(200).json(tarefas);
   }
 
-  idExist(req: Request, res: Response) {
+  async idExist(req: Request, res: Response) {
     const id = Number(req.params.id);
 
     const service = new TarefaService();
-    service.getById(id);
+    await service.getById(id);
 
     return res.status(204);
   }
 
-  getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response) {
     const id = Number(req.params.id);
 
     const service = new TarefaService();
-    const tarefa = service.getById(id);
+    const tarefa = await service.getById(id);
 
     return res.status(200).json(tarefa);
   }
 
-  update(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     const id = Number(req.params.id);
     const updateBody = pickObject(req.body, [
       "title",
@@ -72,7 +72,7 @@ class TarefaController {
 
 
     const service = new TarefaService();
-    const tarefa = service.update({
+    const tarefa = await service.update({
       id,
       ...updateBody,
     });
@@ -80,11 +80,11 @@ class TarefaController {
     return res.status(200).json(tarefa);
   }
 
-  delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
 
     const service = new TarefaService();
-    service.delete(id);
+    await service.delete(id);
 
     return res.status(204).json({ sucess: true });
   }
