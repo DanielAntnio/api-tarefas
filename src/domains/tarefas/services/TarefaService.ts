@@ -10,17 +10,13 @@ interface IUpdateTarefa
 
 class TarefaService {
   create({ title, description }: ICriarTarefa) {
-    if (!title?.trim()) {
-      throw new BadRequestError("Nome da tarefa é obrigatório");
-    }
-
     const novaTarefa: Tarefa = {
       id: Math.random(),
       title,
       completed: false,
     };
 
-    if (description?.trim()) novaTarefa.description = description;
+    if (description) novaTarefa.description = description;
 
     bancoDeDadosEmMemoria.push(novaTarefa);
 
