@@ -12,7 +12,7 @@ interface ICreateBody extends Pick<Tarefa, "title" | "description"> {}
 interface IUpdateBody extends Partial<Omit<Tarefa, "id">> {}
 
 class TarefaController {
- async create(req: Request, res: Response) {
+  async create(req: Request, res: Response) {
     const createParams = pickObject(req.body, [
       "title",
       "description",
@@ -69,7 +69,6 @@ class TarefaController {
       throw new BadRequestError(
         "Body deve ter ao menos um paramentro de Tarefa",
       );
-
 
     const service = new TarefaService();
     const tarefa = await service.update({

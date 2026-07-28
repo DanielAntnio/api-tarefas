@@ -38,17 +38,16 @@ class TarefaService {
   }
 
   async update({ id, ...updateValues }: IUpdateTarefa) {
-    const tarefa = await prisma.task.update({ where: { id }, data: updateValues})
-
-    // TODO verificar se tarefa existia??
+    const tarefa = await prisma.task.update({
+      where: { id },
+      data: updateValues,
+    });
 
     return tarefa;
   }
 
   async delete(id: number) {
-    const tarefa = await prisma.task.delete({ where: { id } });
-
-    // TODO verificar se tarefa deleta sequer existia??
+    await prisma.task.delete({ where: { id } });
   }
 }
 
