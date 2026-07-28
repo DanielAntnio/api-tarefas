@@ -10,10 +10,10 @@ tarefaRoutes.get("/:id", controller.getById);
 
 tarefaRoutes.head("/:id", controller.idExist);
 
-tarefaRoutes.post("/", validateBody([ "title" ]), controller.create);
+tarefaRoutes.post("/", validateBody, controller.create);
 
-tarefaRoutes.put("/:id", validateBody(), controller.update)
+tarefaRoutes.put("/:id", validateBody, controller.update);
 
-tarefaRoutes.delete("/:id", controller.delete)
+tarefaRoutes.delete("/:id", controller.delete);
 
 export { tarefaRoutes };
