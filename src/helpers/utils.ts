@@ -10,9 +10,13 @@ export function pickObject<
 >(
   source: Source,
   keys: Keys[],
-  ignoreFieldCondition: (field: Source[Keys]) => boolean = fieldHasContent,
-) {
-  const filteredKeys = keys.filter((key) => ignoreFieldCondition(source[key]));
+  filterCondition: (field: Source[Keys]) => boolean = fieldHasContent,
+): { [key in Keys]: Source[Keys] } {
+  const keysInSource = keys.filter((key) => key in source);
+  const filteredKeys = keysInSource.filter((key) =>
+    filterCondition(source[key]),
+  );
+
   const filteredEntries = filteredKeys.map((key) => [key, source[key]]);
   const filteredObject = Object.fromEntries(filteredEntries);
 
