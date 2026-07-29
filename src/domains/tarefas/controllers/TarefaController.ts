@@ -41,7 +41,7 @@ class TarefaController {
     const service = new TarefaService();
     await service.getById(id);
 
-    return res.status(204);
+    return res.status(200);
   }
 
   async getById(req: Request, res: Response) {
