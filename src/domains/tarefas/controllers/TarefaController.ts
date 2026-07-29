@@ -6,17 +6,15 @@ import {
   trimObjectStrings,
 } from "../../../helpers/utils";
 import { BadRequestError } from "../../../helpers/api-erros";
-import { Tarefa } from "../model/Tarefa";
-
-interface ICreateBody extends Pick<Tarefa, "title" | "description"> {}
-interface IUpdateBody extends Partial<Omit<Tarefa, "id">> {}
+import { Prisma } from "../../../../generated/prisma/client";
+import { taskKeysFiltered } from "../../../helpers/const";
 
 class TarefaController {
   async create(req: Request, res: Response) {
-    const createParams = pickObject(req.body, [
-      "title",
-      "description",
-    ]) as ICreateBody;
+    const createParams = pickObject(
+      req.body,
+      taskKeysFiltered,
+    ) as Prisma.TaskCreateInput;
 
     trimObjectStrings(createParams);
 
@@ -57,11 +55,10 @@ class TarefaController {
 
   async update(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const updateBody = pickObject(req.body, [
-      "title",
-      "description",
-      "completed",
-    ]) as IUpdateBody;
+    const updateBody = pickObject(
+      req.body,
+      taskKeysFiltered,
+    ) as Prisma.TaskUpdateInput;
 
     trimObjectStrings(updateBody);
 

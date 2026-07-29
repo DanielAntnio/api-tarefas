@@ -1,20 +1,9 @@
+import { Prisma } from "../../../../generated/prisma/client";
 import { prisma } from "../../../config/prismaClient";
-import { NotfoundError } from "../../../helpers/api-erros";
-import { Tarefa } from "../model/Tarefa";
-
-interface ICriarTarefa extends Pick<Tarefa, "title" | "description"> {}
-
-interface IUpdateTarefa
-  extends Pick<Tarefa, "id">, Omit<Partial<Tarefa>, "id"> {}
 
 class TarefaService {
-  async create({ title, description }: ICriarTarefa) {
-    const novaTarefa = await prisma.task.create({
-      data: {
-        title,
-        description,
-      },
-    });
+  async create(data: Prisma.TaskCreateInput) {
+    const novaTarefa = await prisma.task.create({ data });
 
     return novaTarefa;
   }
@@ -37,10 +26,10 @@ class TarefaService {
     return tarefa;
   }
 
-  async update({ id, ...updateValues }: IUpdateTarefa) {
+  async update({ id, ...data }: { id: number } & Prisma.TaskUpdateInput) {
     const tarefa = await prisma.task.update({
       where: { id },
-      data: updateValues,
+      data,
     });
 
     return tarefa;
