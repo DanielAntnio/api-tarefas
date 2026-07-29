@@ -19,9 +19,7 @@ class TarefaService {
   }
 
   async getById(id: number) {
-    const tarefa = await prisma.task.findUnique({ where: { id } });
-
-    if (!tarefa) throw new NotfoundError("Tarefa não Encontrada");
+    const tarefa = await prisma.task.findUniqueOrThrow({ where: { id } });
 
     return tarefa;
   }
