@@ -30,7 +30,7 @@ export function PrismaErrorHandler(
 
   if (error instanceof PrismaClientValidationError)
     throw new BadRequestError(
-      "Alguns parâmetros estão com tipgaem incorreta ou algun parâmetro obrigatório está ausente.",
+      "Ocorreu um erro de validação, verifique se o body está correto.",
     );
 
   if (error instanceof PrismaClientInitializationError)
