@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { TarefaController } from "../domains/tarefas/controllers/TarefaController";
 import validateBody from "../middlewares/validation";
-import { taskKeysFiltered } from "../helpers/const";
 
 const tarefaRoutes = Router();
 const controller = new TarefaController();
