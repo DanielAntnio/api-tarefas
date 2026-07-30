@@ -22,7 +22,7 @@ export function PrismaErrorHandler(
   if (error instanceof PrismaClientKnownRequestError) {
     switch (error.code) {
       case "P2025":
-        throw new NotfoundError("Tarefa não Encontrada");
+        throw new NotfoundError(`${error.meta?.modelName ?? "Objeto"} não encontrada`);
       default:
         throw new InternalServerError();
     }
