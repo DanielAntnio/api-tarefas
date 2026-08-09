@@ -21,10 +21,3 @@ export class NotfoundError extends ApiError {
     Object.setPrototypeOf(this, ApiError.prototype);
   }
 }
-
-export class InternalServerError extends ApiError {
-  constructor(message: string = "Erro desconhecido no servidor") {
-    super(message, 500);
-    Object.setPrototypeOf(this, ApiError.prototype);
-  }
-}
