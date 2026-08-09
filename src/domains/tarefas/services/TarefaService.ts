@@ -1,64 +1,40 @@
-import { BadRequestError, NotfoundError } from "../../../helpers/api-erros";
-import { Tarefa } from "../model/Tarefa";
-
-const bancoDeDadosEmMemoria: Tarefa[] = [];
-
-interface ICriarTarefa extends Pick<Tarefa, "title" | "description"> {}
-
-interface IUpdateTarefa
-  extends Pick<Tarefa, "id">, Omit<Partial<Tarefa>, "id"> {}
+import { Prisma } from "../../../../generated/prisma/client";
+import { prisma } from "../../../config/prismaClient";
 
 class TarefaService {
-  create({ title, description }: ICriarTarefa) {
-    if (!title?.trim()) {
-      throw new BadRequestError("Nome da tarefa é obrigatório");
-    }
-
-    const novaTarefa: Tarefa = {
-      id: Math.random(),
-      title,
-      completed: false,
-    };
-
-    if (description?.trim()) novaTarefa.description = description;
-
-    bancoDeDadosEmMemoria.push(novaTarefa);
+  async create(data: Prisma.TaskCreateInput) {
+    const novaTarefa = await prisma.task.create({ data });
 
     return novaTarefa;
   }
 
-  list(completed?: boolean) {
-    if (completed === undefined) return bancoDeDadosEmMemoria;
+  async list(completed?: boolean) {
+    const tarefas = await prisma.task.findMany({
+      where: {
+        completed,
+      },
+    });
 
-    return bancoDeDadosEmMemoria.filter(
-      (tarefa) => tarefa.completed === completed,
-    );
+    return tarefas;
   }
 
-  getById(id: number) {
-    const tarefa = bancoDeDadosEmMemoria.find((tarefa) => tarefa.id === id);
-
-    if (!tarefa) throw new NotfoundError("Tarefa não Encontrada");
+  async getById(id: number) {
+    const tarefa = await prisma.task.findUniqueOrThrow({ where: { id } });
 
     return tarefa;
   }
 
-  update({ id, ...updateValues }: IUpdateTarefa) {
-    const tarefa = this.getById(id);
-
-    if (!tarefa) throw new NotfoundError("Tarefa não Encontrada");
-
-    Object.assign(tarefa, updateValues);
+  async update({ id, ...data }: { id: number } & Prisma.TaskUpdateInput) {
+    const tarefa = await prisma.task.update({
+      where: { id },
+      data,
+    });
 
     return tarefa;
   }
 
-  delete(id: number) {
-    const index = bancoDeDadosEmMemoria.findIndex((tarefa) => tarefa.id === id);
-
-    if (index < 0) throw new NotfoundError("Tarefa não encontrada.");
-
-    bancoDeDadosEmMemoria.splice(index, 1);
+  async delete(id: number) {
+    await prisma.task.delete({ where: { id } });
   }
 }
 
