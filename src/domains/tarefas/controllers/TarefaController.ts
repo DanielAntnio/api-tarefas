@@ -1,103 +1,86 @@
 import type { Request, Response } from "express";
 import { TarefaService } from "../services/TarefaService";
+import {
+  parseStringToBoolean,
+  pickObject,
+  trimObjectStrings,
+} from "../../../helpers/utils";
 import { BadRequestError } from "../../../helpers/api-erros";
-import { Tarefa } from "../model/Tarefa";
-
-interface IUpdateBody extends Partial<Omit<Tarefa, "id">> {}
-
-function CopyObjectSubset<T, K extends keyof T>(
-  source: Pick<T, K>,
-  dest: T,
-  keys: K[],
-) {
-  keys.forEach((key) => {
-    if (
-      source[key] !== undefined &&
-      (typeof source[key] !== "string" || source[key].trim())
-    )
-      dest[key] = source[key];
-  });
-}
-
-function getUpdateBody(body: Request["body"], params: string[]) {
-  if (body === undefined) throw new BadRequestError("Deve fornecer body");
-
-  const update: { [key: string]: string | boolean } = {};
-  CopyObjectSubset(body, update, params);
-
-  if (Object.keys(update).length === 0)
-    throw new BadRequestError(
-      "Body deve conter ao menos um paramentro de tarefa",
-    );
-
-  return update;
-}
+import { Prisma } from "../../../../generated/prisma/client";
+import { taskKeysFiltered } from "../../../helpers/const";
 
 class TarefaController {
-  create(req: Request, res: Response) {
-    if (req.body === undefined) throw new BadRequestError("Deve fornecer body");
-    const { title, description } = req.body;
+  async create(req: Request, res: Response) {
+    const createParams = pickObject(
+      req.body,
+      taskKeysFiltered,
+    ) as Prisma.TaskCreateInput;
+
+    trimObjectStrings(createParams);
 
     const service = new TarefaService();
-    const tarefa = service.create({ title, description });
+    const tarefa = await service.create(createParams);
 
     return res.status(201).json(tarefa);
   }
 
-  list(req: Request, res: Response) {
+  async list(req: Request, res: Response) {
     const service = new TarefaService();
 
-    const { completed } = req.query;
+    const completed = parseStringToBoolean(
+      req.query.completed as string | undefined,
+    );
 
-    if (completed !== "true" && completed !== "false") {
-      const tarefas = service.list();
-      return res.status(200).json(tarefas);
-    }
-
-    const tarefas = service.list(completed === "true");
+    const tarefas = await service.list(completed);
     return res.status(200).json(tarefas);
   }
 
-  idExist(req: Request, res: Response) {
+  async idExist(req: Request, res: Response) {
     const id = Number(req.params.id);
 
     const service = new TarefaService();
-    service.getById(id);
+    await service.getById(id);
 
-    return res.status(204);
+    return res.status(200);
   }
 
-  getById(req: Request, res: Response) {
+  async getById(req: Request, res: Response) {
     const id = Number(req.params.id);
 
     const service = new TarefaService();
-    const tarefa = service.getById(id);
+    const tarefa = await service.getById(id);
 
     return res.status(200).json(tarefa);
   }
 
-  update(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     const id = Number(req.params.id);
-    const body: IUpdateBody = getUpdateBody(req.body, [
-      "title",
-      "description",
-      "completed",
-    ]);
+    const updateBody = pickObject(
+      req.body,
+      taskKeysFiltered,
+    ) as Prisma.TaskUpdateInput;
+
+    trimObjectStrings(updateBody);
+
+    if (Object.keys(updateBody).length === 0)
+      throw new BadRequestError(
+        "Body deve ter ao menos um paramentro de Tarefa",
+      );
 
     const service = new TarefaService();
-    const tarefa = service.update({
+    const tarefa = await service.update({
       id,
-      ...body,
+      ...updateBody,
     });
 
     return res.status(200).json(tarefa);
   }
 
-  delete(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     const id = Number(req.params.id);
 
     const service = new TarefaService();
-    service.delete(id);
+    await service.delete(id);
 
     return res.status(204).json({ sucess: true });
   }
